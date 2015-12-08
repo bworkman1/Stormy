@@ -2,7 +2,9 @@ package yourwebdeveloper.com.stormy.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -32,7 +34,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import yourwebdeveloper.com.stormy.R;
-import yourwebdeveloper.com.stormy.location.MyLocation;
 import yourwebdeveloper.com.stormy.weather.Current;
 import yourwebdeveloper.com.stormy.weather.Day;
 import yourwebdeveloper.com.stormy.weather.Forecast;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final String DAILY_FORECAST = "DAILY FORECAST";
+    public static final String HOURLY_FORECAST = "DAILY FORECAST";
 
     private Forecast mForecast;
 
@@ -53,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.iconImageView) ImageView mIconImageView;
     @Bind(R.id.refreshImageView) ImageView mRefreshImageView;
     @Bind(R.id.progressBar) ProgressBar mProgressBar;
+    @Bind(R.id.locationLabel) TextView mArea;
 
-    private double mLatitude = 40.231327;
-    private double mLongitude = -82.449925;
+    private double mLatitude;
+    private double mLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,24 +69,27 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        /*
-        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-            @Override
-            public void gotLocation(Location location){
-                //Got the location!
-                Log.d(TAG, "Test " + location.getLatitude());
-                mLatitude = location.getLatitude();
-                mLongitude = location.getLongitude();
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                "yourwebdeveloper.com.stormy", Context.MODE_PRIVATE);
 
-            }
-        };
+        //prefs.edit().clear().commit(); clear preferences
 
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(this, locationResult);
+        String latitude = prefs.getString("latitude", "");
+        String longitude = prefs.getString("longitude", "");
 
-        Log.d(TAG, "Tester " + myLocation);
+        String area = prefs.getString("area", "");
+        if(!latitude.isEmpty()) {
+            mLatitude = Double.parseDouble(latitude);
+            mLongitude = Double.parseDouble(longitude);
+            mArea.setText(area);
+        } else {
+            mLatitude = 40.231327;
+            mLongitude = -82.449925;
+            mArea.setText("Set Your Location");
 
-        */
+            Toast.makeText(getApplicationContext(), "Set you location by clicking the gear icon", Toast.LENGTH_LONG).show();
+        }
+
 
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +102,19 @@ public class MainActivity extends AppCompatActivity {
         getForcast(mLatitude, mLongitude);
     }
 
-    private void getForcast(double latitude, double longitude) {
+    public void getForcast(double latitude, double longitude) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                toogleRefresh();
+            }
+        });
+
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                "yourwebdeveloper.com.stormy", Context.MODE_PRIVATE);
+        String area = prefs.getString("area", "");
+        mArea.setText(area);
+
         String apiKey = "584ab0a45b0194bc8e253ed0006aadff";
         String forecastUrl = "https://api.forecast.io/forecast/"+apiKey+"/"+latitude+","+longitude;
 
@@ -157,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.network_unavaliable),
                     Toast.LENGTH_LONG).show();
         }
+        toogleRefresh();
     }
 
     private void toogleRefresh() {
@@ -286,5 +305,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick (R.id.hourlyButton)
+    public void startHourlyActivity(View view) {
+        Intent intent = new Intent(this, HourlyForecastActivity.class);
+        intent.putExtra(HOURLY_FORECAST, mForecast.getHourlyForecast());
+        startActivity(intent);
+    }
 
+    @OnClick (R.id.settingsButton)
+    public void showSettings(View view) {
+        getForcast(mLatitude, mLongitude);
+        Intent intent = new Intent(this, AppSettings.class);
+        startActivity(intent);
+    }
 }

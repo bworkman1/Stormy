@@ -6,7 +6,8 @@
     android:paddingLeft="64dp"
     android:paddingRight="32dp"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="4dp"
+                android:background="@drawable/bg_gradient_reverse">
 
 
     <ImageView
@@ -41,15 +42,23 @@
         tools:text="Wednesday"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/temperatureLabel"
         android:layout_alignTop="@+id/circleImageView"
         android:layout_alignBottom="@+id/circleImageView"
         android:layout_alignLeft="@+id/circleImageView"
         android:layout_alignRight="@+id/circleImageView"
-        android:gravity="center"
-        android:textColor="#f25019"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="#1e69de"
         tools:text="100"
-        android:layout_marginTop="13dp"/>
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

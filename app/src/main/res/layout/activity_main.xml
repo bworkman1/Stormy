@@ -58,7 +58,8 @@
         android:src="@drawable/cloudy_night"
         android:layout_alignTop="@+id/locationLabel"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="false"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -152,6 +153,21 @@
         android:layout_alignRight="@+id/refreshImageView"
         android:layout_alignEnd="@+id/refreshImageView" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/settingsButton"
+        android:layout_alignRight="@+id/iconImageView"
+        android:layout_alignEnd="@+id/iconImageView"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:background="@drawable/settings"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -162,7 +178,8 @@
         android:layout_alignParentTop="true">
 
         <Button
-            android:layout_width="158dp"
+            android:layout_width="0dp"
+            android:layout_weight=".50"
             android:layout_height="wrap_content"
             android:text="Hourly"
             android:id="@+id/hourlyButton"
@@ -171,13 +188,15 @@
             android:textColor="#ffffffff" />
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight=".50"
             android:layout_height="wrap_content"
             android:text="7 Day"
             android:id="@+id/dailyButton"
-            android:layout_gravity="bottom"
             android:textColor="#ffffffff"
             android:background="#40ffffff"
-            android:layout_marginLeft="2dp"/>
+            android:layout_marginLeft="2dp"
+            android:layout_gravity="bottom"/>
+
     </LinearLayout>
 </RelativeLayout>
